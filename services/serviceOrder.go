@@ -12,7 +12,7 @@ import (
 
 func SaveOrder(req apimodels.Request) (apimodels.Response, error) {
 	var res apimodels.Response
-	PrettyPrint(req)
+	// PrettyPrint(req)
 	db := database.GetDb()
 	var items []models.Item
 	var total int64
@@ -73,4 +73,40 @@ func PrettyPrint(v interface{}) (err error) {
 		fmt.Println(string(b))
 	}
 	return
+}
+
+// get all order
+func GetOrderAll() (apimodels.Response, error) {
+	var res apimodels.Response
+	var orders []models.Order
+	db := database.GetDb()
+	err := db.Find(&orders).Error
+	if err != nil {
+		return res, err
+	}
+	var req apimodels.Request
+
+	for _, vorder := range orders {
+		var items []apimodels.Item
+		for _, vitem := range vorder.DetaiItem {
+			var item apimodels.Item
+			item.Description = vitem.Description
+			item.ItemCode = vitem.ItemCode
+			item.Price = vitem.Price
+			item.Quantity = int64(vitem.Quantity)
+			items = append(items, item)
+		}
+		req.CustomerName = vorder.CustomerName
+		req.Items = items
+	}
+	fmt.Println(orders)
+
+
+	return apimodels.Response{
+		Data:         req,
+		DateTrans:    fmt.Sprintf("%v", dateTimeEpoch(currentTime())),
+		ResponseCode: "00",
+		Status:       "Success",
+	}, nil
+
 }

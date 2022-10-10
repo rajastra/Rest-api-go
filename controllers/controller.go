@@ -9,28 +9,29 @@ import (
 )
 
 func CreateOrder(ctx *gin.Context) {
-
 	var req apimodels.Request
-	user, password, ok := ctx.Request.BasicAuth()
-	if ok && user == "iketutg" && password == "1234" {
-		var res apimodels.Response
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.AbortWithError(http.StatusBadRequest, err)
-		}
-		res, err := services.SaveOrder(req)
-		if err != nil {
-			res.Status = "Create Order Gagal"
-			res.ResponseCode = "400"
-		}
-		ctx.JSON(http.StatusOK, res)
-		return
+	var res apimodels.Response
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
 	}
-	ctx.JSON(http.StatusNonAuthoritativeInfo, nil)
+	res, err := services.SaveOrder(req)
+	if err != nil {
+		res.Status = "Create Order Gagal"
+		res.ResponseCode = "400"
+	}
+	ctx.JSON(http.StatusOK, res)
 	// ctx.Abort()
 	// ctx.Writer.Header().Set("WWW-Authenticate", "Basic realm=Restricted")
 }
 
 func GetOrderAll(ctx *gin.Context) {
+	var res apimodels.Response
+	res, err := services.GetOrderAll()
+	if err != nil {
+		res.Status = "Get Order Gagal"
+		res.ResponseCode = "400"
+	}
+	ctx.JSON(http.StatusOK, res)
 }
 func UpdateOrder(ctx *gin.Context) {
 
