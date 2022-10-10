@@ -1,12 +1,11 @@
 package database
 
 import (
-	"rajastra/rest-api-go/models"
+	"dtskominfo-gin/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
-
 
 var (
 	db  *gorm.DB
@@ -14,7 +13,10 @@ var (
 )
 
 func init() {
-	dsn := "rajastra:gamesperang@tcp(127.0.0.1:3306)/golang_rest?charset=utf8mb4&parseTime=True&loc=Local"
+	//todo
+	// dsn
+
+	dsn := "root:@tcp(127.0.0.1:3306)/golang_rest?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	//open database
 	db = db.Debug()
